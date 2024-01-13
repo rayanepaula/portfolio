@@ -1,0 +1,104 @@
+*{
+    font-family: sans-serif;
+    width: 100%;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: white;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.logo{
+    max-width: 500px;
+    margin-bottom: 24px;
+}
+.container-input{
+    max-width: 400px;
+    margin: 14px 0;
+}
+.container-input span{
+    color:black;
+    font-size: 20px;
+}
+.slider{
+    appearance: none;
+    width: 100%;
+    border-radius: 5px;
+    background: #dfdfdf;
+    height: 10px;
+    outline: none;
+    margin-top: 8px;
+}
+.Button-cta{
+    height: 50px;
+    background-color: #3eb72b;
+    border: 0;
+    border-radius: 5px ;
+    cursor: pointer;
+    margin-top: 20px;
+    color: #fff;
+    font-weight: bold;
+    font-size: 18px;
+}
+.container-password{
+    max-width: 380px;
+    margin: 10px 0;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    cursor: pointer;
+}
+.Title{
+    text-align: center;
+    color: black;
+    font-size: 18px;
+    margin-top: 10px;
+    margin-bottom: 8px;
+}
+.password{
+    height: 30px;
+    margin-top: 5px;
+    background-color: #dfdfdf;
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #3eb72b;
+    font-weight: bold;
+    font-size: 18px;
+    border: 0.5px solid green;
+    transition: transform 0.4s;
+}
+.password:hover{
+    transform: scale(1.1);
+}
+.tooltip{
+    color: black;
+    position: relative;
+    top: 8px;
+    padding: 6px 6px;
+    background: #dfdfdf;
+    text-align: center;
+    font-size: 16px;
+    border-radius: 6px;
+    visibility: hidden;
+    opacity: 0;
+    transition: all 0.5s ease-in-out;
+}
+.hide{
+    display: none;
+}
+.container-password:hover .tooltip {
+    visibility: visible;
+    bottom: 30px;
+    opacity: 1;
+}
+
+

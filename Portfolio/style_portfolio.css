@@ -1,0 +1,163 @@
+/*ESTILO GERAL*/
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins" , sans-serif;
+}
+body{
+    background-color:#f5f2ee;
+    height: 100vh;
+}
+.interface{
+    max-width: 1280px;
+    margin: 0 auto;
+}
+.flex{
+    display: flex;
+}
+h2.titulo{
+    text-align: center;
+    color: #300A10;
+    font-size: 35px;
+}
+h2.titulo span{
+    color: palevioletred;
+}
+
+/*ESTILO DO CABECALHO*/
+header{
+    padding: 40px 4%;
+}
+header > .interface{
+    display: flex;
+    align-items: center;
+    justify-content:space-between;
+}
+header a{
+    color: #300a10;
+    text-decoration: none;
+    display: inline-block;
+    
+}
+header a:hover{
+    color: #DB7093;
+    transform: scale(1.1);
+    transition: .2s;
+}
+header nav ul{
+    list-style-type: none;
+}
+header nav ul li{
+    display: inline-block;
+    padding: 0 50px;
+}
+.button-contact button{
+    padding: 10px 25px;
+    font-size: 15px;
+    font-weight: 600px;
+    background-color: #300A10;
+    border: 0;
+    border-radius: 30px;
+    cursor: pointer;
+    color: aliceblue;
+    transition: .2s;
+    margin-left: 40px;
+    margin-right: 40px;
+}
+.button-contact button:hover{
+    box-shadow: 0px 0px 8px #852b39;
+    transform: scale(1.05);
+}
+.logo img {
+    max-width:100px;
+    max-height:80px;
+    width: auto;
+    height: auto;
+    margin-left: 40px;
+}
+
+/*ESTILO DO TOPO DO SITE*/
+section.topo-do-site{
+    padding: 40px 4%;
+}
+section.topo-do-site .flex{
+    align-items: center;
+    justify-content: center;
+    gap: 120px;
+}
+.topo-do-site h1{
+    color: #300A10;
+    font-size: 40px;
+    line-height: 40px;
+}
+.topo-do-site h1 span{
+    color:palevioletred;
+    font-size: 60px;
+}
+.topo-do-site .txt-topo-site h1{
+    padding: 40px 0%;
+    margin-left: 40px;
+}
+.topo-do-site .txt-topo-site p{
+    color: #300a10;
+    margin: 20px 0;
+    margin-left: 40px;
+    margin-bottom: 40px;
+}
+.topo-do-site .img-topo-site img {
+    position: relative;
+    animation: flutuar 2s ease-in-out infinite alternate;
+    max-width:350px;
+    max-height:350px;
+    width: auto;
+    height: auto;
+    margin-right: 50px;
+}
+@keyframes flutuar{
+    0%{
+        top: 0;
+    }
+    100%{
+        top: 30px;
+    }
+}
+/*ESTILO DAS HABILIDADES*/
+
+section.habilidades{
+    padding: 40px 4%;
+}    
+section.habilidades .flex{
+    gap: 60px;
+}
+.habilidades .habilidades-box{
+    color: #300A10;
+    padding: 40px;
+    text-align: center;
+    margin-top: 45px;
+    border-radius: 20px;
+    transition: 0.2s;
+}
+.habilidades .habilidades-box:hover{
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(216, 112, 147, 0.596);
+}
+.habilidades .habilidades-box i{
+    font-size: 60px;
+    color: palevioletred;
+}
+.habilidades .habilidades-box h3{
+    font-size: 25px;
+    margin: 15px 0;
+}
+.habilidades .habilidades-box p{
+    font-size: 15px;
+}
+/* ESTILO DO SOBRE*/
+section.sobre{
+    padding: 40px 6%;
+}
+section.sobre img{
+    width: 200px;
+    border-radius: 15px;
+}

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="Keyword" content = "Gerador de senhas, gerador password">
+    <title> Gerador de Senhas da Rayane </title>
+    <link rel="Stylesheet" href="Style.css">
+</head>
+<body>
+    <img class="logo" src="./Assets/logo.png" alt="Gerador de senha logo" />
+    <main class="container-input">
+        <span>Tamanho: <span id="valor"></span> caracteres </span>
+        <input id="slider" class="slider" type="range" min="5" max="15" value="10"/>
+        <button id="Button" class="Button-cta" onclick="generatepassword()"> Gerar senha</button>
+    </main>
+    <div id="container-password" onclick = "copypassword()" class="container-password hide">
+        <span class="Title">Sua senha gerada foi:</span> <span id="password" class="password"></span>
+        <span class="tooltip"> Clique na senha para copiar 👆 </span>
+
+    </div>
+    <script src="Script.js"></script>
+</body>
+</html>
