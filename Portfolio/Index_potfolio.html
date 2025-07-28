@@ -1,3 +1,163 @@
+</main>
+
+<!-- Chatbot Widget -->
+<button id="openChatbotBtn" style="position:fixed;bottom:32px;right:32px;z-index:1001;background:#463273;color:#fff;border:none;border-radius:50%;width:56px;height:56px;box-shadow:0 2px 12px rgba(70,50,115,0.18);font-size:1.7rem;cursor:pointer;">💬</button>
+<div id="chatbotContainer" style="display:none;position:fixed;bottom:100px;right:32px;z-index:1002;background:#fff;border-radius:16px;box-shadow:0 4px 32px rgba(70,50,115,0.18);border:2px solid #463273;width:370px;max-width:95vw;">
+  <div style="background:#463273;color:#fff;padding:12px 16px;border-radius:16px 16px 0 0;font-weight:600;display:flex;align-items:center;justify-content:space-between;">
+    <span>Flash Info</span>
+    <button id="closeChatbotBtn" style="background:none;border:none;color:#fff;font-size:1.2rem;cursor:pointer;">&times;</button>
+  </div>
+  <div id="chatbox" style="width:100%;height:180px;padding:12px;overflow-y:auto;font-family:Poppins,Arial,sans-serif;background:#f9f9f9;font-size:1rem;display:flex;flex-direction:column;"></div>
+  <div id="categories" style="margin:10px 0 0 0;">
+    <div id="topicsList" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px 8px;padding:16px 8px 10px 8px;">
+      <button class="topic-btn chatbot-btn" data-cat="basic">Basics</button>
+      <button class="topic-btn chatbot-btn" data-cat="experience">Experiences</button>
+      <button class="topic-btn chatbot-btn" data-cat="tools">Tools</button>
+      <button class="topic-btn chatbot-btn" data-cat="courses">Courses</button>
+      <button class="topic-btn chatbot-btn" data-cat="goals">Goals</button>
+      <button class="topic-btn chatbot-btn" data-cat="contact">Contact</button>
+    </div>
+  </div>
+  <div id="subcategories" style="display:none;margin-top:10px;">
+    <strong id="subcat-title" style="padding-left:8px;"></strong>
+    <div id="subcat-list" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px 8px;margin-top:12px;padding:0 8px 0 8px;"></div>
+    <div style="display:flex;justify-content:center;margin:10px 0;">
+      <button id="backBtn" class="chatbot-btn">Back to topics</button>
+    </div>
+  </div>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const openBtn = document.getElementById('openChatbotBtn');
+  const closeBtn = document.getElementById('closeChatbotBtn');
+  const chatbot = document.getElementById('chatbotContainer');
+  const chatbox = document.getElementById('chatbox');
+  const categoriesDiv = document.getElementById('categories');
+  const subcategoriesDiv = document.getElementById('subcategories');
+  const subcatTitle = document.getElementById('subcat-title');
+  const subcatList = document.getElementById('subcat-list');
+  const backBtn = document.getElementById('backBtn');
+  const topicsList = document.getElementById('topicsList');
+  let conversationState = null;
+  const data = {
+    basic: {
+      "Where are you based?": "I'm based in Montreal, Canada.",
+      "What languages do you speak?": "Portuguese (native), English, and French (B2).",
+      "What is your current job?": "I'm a Business Architecture Analyst at Accenture."
+    },
+    experience: {
+      options: ["Concentrix", "Accenture"],
+      Concentrix: "At Concentrix, I advanced from customer service to Planning Analyst, optimizing workflows with Excel and KPIs.",
+      Accenture: "At Accenture, I work in SAP Security, automating tasks and creating efficient reporting macros."
+    },
+    tools: {
+      "What tools do you use?": "SAP, Power BI, Microsoft Excel (macros), SQL (learning), AI tools."
+    },
+    courses: {
+      "What courses have you done?": "AI data classification, SQL basics, Power BI, Google IT Support, HTML/CSS/JS."
+    },
+    goals: {
+      "What are your goals?": "Grow in Data & AI, build smarter automated solutions with impact."
+    }
+  };
+  function addMessage(text, sender) {
+    const msgDiv = document.createElement('div');
+    msgDiv.style.margin = '7px 0';
+    msgDiv.style.wordBreak = 'break-word';
+    msgDiv.style.padding = '7px 12px';
+    msgDiv.style.borderRadius = '12px';
+    msgDiv.style.maxWidth = '90%';
+    msgDiv.style.whiteSpace = 'pre-line';
+    msgDiv.style.display = 'inline-block';
+    msgDiv.style.alignSelf = sender === 'user' ? 'flex-end' : 'flex-start';
+    msgDiv.style.background = sender === 'user' ? '#e7e3f7' : '#f3f3f3';
+    msgDiv.style.color = sender === 'user' ? '#463273' : 'green';
+    msgDiv.style.fontWeight = sender === 'user' ? 'bold' : 'normal';
+    msgDiv.textContent = text;
+    chatbox.appendChild(msgDiv);
+    chatbox.scrollTop = chatbox.scrollHeight;
+  }
+  function showCategories() {
+    categoriesDiv.style.display = "block";
+    subcategoriesDiv.style.display = "none";
+    conversationState = null;
+  }
+  function showSubcategories(cat) {
+    subcatList.innerHTML = '';
+    subcatTitle.textContent = "Questions you can ask:";
+    if (cat === 'experience') {
+      subcatTitle.textContent = "Choose an experience:";
+      data.experience.options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.textContent = opt;
+        btn.dataset.exp = opt;
+        btn.className = 'chatbot-btn exp-btn';
+        subcatList.appendChild(btn);
+      });
+    } else {
+      for (let question in data[cat]) {
+        const btn = document.createElement('button');
+        btn.textContent = question;
+        btn.dataset.question = question;
+        btn.className = 'chatbot-btn question-btn';
+        subcatList.appendChild(btn);
+      }
+    }
+    categoriesDiv.style.display = "none";
+    subcategoriesDiv.style.display = "block";
+    conversationState = cat;
+  }
+  topicsList.addEventListener('click', e => {
+    if (e.target.classList.contains('topic-btn')) {
+      const cat = e.target.dataset.cat;
+      if (cat === 'contact') {
+        subcatTitle.textContent = "Contact Options:";
+        subcatList.innerHTML = `
+          <a href="https://www.linkedin.com/in/rayanepaula" target="_blank" style="text-decoration:none;text-align:center;background:#e7e3f7;color:#463273;padding:6px;border-radius:6px;margin-bottom:6px;display:block;">LinkedIn</a>
+          <a href="mailto:rayane.do.nascimento@accenture.com" style="text-decoration:none;text-align:center;background:#e7e3f7;color:#463273;padding:6px;border-radius:6px;margin-bottom:6px;display:block;">Email</a>
+          <a href="tel:+1 (438) 728 6481" style="text-decoration:none;text-align:center;background:#e7e3f7;color:#463273;padding:6px;border-radius:6px;margin-bottom:6px;display:block;">Phone</a>
+        `;
+        categoriesDiv.style.display = "none";
+        subcategoriesDiv.style.display = "block";
+        conversationState = 'contact';
+      } else {
+        showSubcategories(cat);
+      }
+    }
+  });
+  subcategoriesDiv.addEventListener('click', e => {
+    if(e.target.classList.contains('question-btn')) {
+      if (conversationState && conversationState !== 'experience') {
+        const question = e.target.dataset.question;
+        if(question) {
+          addMessage(question, 'user');
+          const ans = data[conversationState][question];
+          setTimeout(() => addMessage(ans, 'bot'), 400);
+        }
+      }
+    } else if(e.target.classList.contains('exp-btn')) {
+      if(conversationState === 'experience') {
+        const exp = e.target.dataset.exp;
+        addMessage(exp, 'user');
+        addMessage(data.experience[exp], 'bot');
+        setTimeout(() => {
+          addMessage("You can choose another topic or experience.", 'bot');
+          showCategories();
+        }, 700);
+      }
+    }
+  });
+  backBtn.addEventListener('click', showCategories);
+  openBtn.onclick = () => {
+    chatbot.style.display = 'block';
+    if (chatbox.childElementCount === 0) {
+      addMessage("Hi! 👋 I'm Rayane Bot. Please choose a topic below.", 'bot');
+    }
+    showCategories();
+  };
+  closeBtn.onclick = () => { chatbot.style.display = 'none'; };
+});
+</script>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -6,43 +166,16 @@
     <title>Portfólio | Rayane Paula</title>
     <meta name="description" content="Portfólio profissional de Rayane Paula - Desenvolvedora Web e Especialista Salesforce.">
     <link rel="stylesheet" href="style_portfolio.css">
-    <style>
-    /* Animated glass/reflection effect for .topo-do-site */
-    .topo-do-site {
-        position: relative;
-        overflow: hidden;
-    }
-    .topo-do-site::before {
-        content: '';
-        position: absolute;
-        top: 0; left: -60%;
-        width: 60%;
-        height: 100%;
-        background: linear-gradient(120deg,
-            rgba(255,255,255,0.03) 0%,
-            rgba(180,200,255,0.08) 10%,
-            rgba(200,180,255,0.10) 20%,
-            rgba(255,255,255,0.13) 32%,
-            rgba(255,200,235,0.12) 45%,
-            rgba(255,255,255,0.10) 58%,
-            rgba(180,255,255,0.09) 70%,
-            rgba(255,255,255,0.04) 85%,
-            rgba(255,255,255,0.01) 100%
-        );
-        filter: blur(7px);
-        transform: skewX(-20deg);
-        animation: shine-move 8s linear infinite;
-        pointer-events: none;
-    }
-    @keyframes shine-move {
-        0% { left: -60%; }
-        100% { left: 110%; }
-    }
-    </style>
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Playfair+Display:wght@700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
 </head>
 <body>
     <header style="position:sticky;top:0;z-index:100;background:#fff;box-shadow:0 2px 12px rgba(70,50,115,0.07);padding:0.3rem 0;min-height:44px;">
@@ -85,29 +218,32 @@
                 <h2 class="titulo">My <span>Skills</span></h2>
                 <div class="flex">
                     <div class="habilidades-box">
-                        <i class="bi bi-code-slash" aria-hidden="true"></i>
-                        <h3>Languages</h3>
-                        <ul>
-                            <li>HTML5</li>
-                            <li>CSS3</li>
-                            <li>JavaScript</li>
+                        <i class="fas fa-database" title="Data & AI" style="color:#b8a1e3;font-size:2rem;"></i>
+                        <h3>Data & AI</h3>
+                        <ul style="list-style-type: disc; text-align: left; margin-left: 18px;">
+                            <li>Excel (advanced)</li>
+                            <li>SQL (basic)</li>
+                            <li>Power BI (basic to intermediate)</li>
+                            <li>Copilot agents (introductory level)</li>
+                            <li>Use of AI in personal projects</li>
                         </ul>
                     </div>
                     <div class="habilidades-box">
-                        <i class="bi bi-cloud" aria-hidden="true"></i>
-                        <h3>Salesforce</h3>
-                        <ul>
-                            <li>Marketing Cloud</li>
-                            <li>Experience Cloud</li>
+                        <i class="fas fa-code" title="Development" style="color:#b8a1e3;font-size:2rem;"></i>
+                        <h3>Development</h3>
+                        <ul style="list-style-type: disc; text-align: left; margin-left: 18px;">
+                            <li>HTML5, CSS3 (basic)</li>
+                            <li>Git & GitHub, GitHub Pages</li>
+                            <li>Portfolio creation with AI</li>
                         </ul>
                     </div>
                     <div class="habilidades-box">
-                        <i class="bi bi-pc-display-horizontal" aria-hidden="true"></i>
-                        <h3>IT Skills</h3>
-                        <ul>
-                            <li>Operating Systems: Windows, Mac OS, Linux</li>
-                            <li>Tools: Office 365</li>
-                            <li>Project Management: Agile, Scrum, Kanban, Trello, Gantt</li>
+                        <i class="fas fa-star" title="Other Skills" style="color:#b8a1e3;font-size:2rem;"></i>
+                        <h3>Other Skills</h3>
+                        <ul style="list-style-type: disc; text-align: left; margin-left: 18px;">
+                            <li>SAP Access Management</li>
+                            <li>Office 365 (Excel, Word, PowerPoint)</li>
+                            <li>Languages: Portuguese (native), English and French (fluent)</li>
                         </ul>
                     </div>
                 </div>
@@ -115,18 +251,52 @@
         </section>
         <section class="projetos" id="projects">
             <div class="interface">
-                <h2 class="titulo">My <span>Projects</span></h2>
+                <h2 class="titulo" style="margin-bottom:32px;">My <span>Projects</span></h2>
                 <div class="flex">
+                    <a href="../Gerador_senhas/Index.html" target="_blank" rel="noopener" class="projeto-link">
+                        <div class="projeto-box">
+                            <img src="../Gerador_senhas/img/logo_gerador.png" alt="Project 1" loading="lazy">
+                            <h3>Project 1</h3>
+                            <p>Simple project in HTML, CSS, and JavaScript to generate secure passwords with different criteria.</p>
+                        </div>
+                    </a>
                     <div class="projeto-box">
-                        <img src="img/projeto1.png" alt="Project 1" loading="lazy" height="120">
-                        <h3>Project 1</h3>
-                        <p>Short description of project 1. <a href="https://github.com/seuusuario/projeto1" target="_blank" rel="noopener">View on GitHub</a></p>
-                    </div>
-                    <div class="projeto-box">
-                        <img src="img/projeto2.png" alt="Project 2" loading="lazy" height="120">
-                        <h3>Project 2</h3>
+                        Project 1
                         <p>Short description of project 2. <a href="https://github.com/seuusuario/projeto2" target="_blank" rel="noopener">View on GitHub</a></p>
                     </div>
+                </div>
+            </div>
+        </section>
+        <style>
+    .projeto-box {
+        width: 320px;
+        min-height: 320px;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        background: #fff;
+        border-radius: 14px;
+        box-shadow: 0 2px 12px rgba(70,50,115,0.07);
+        margin: 0 10px 20px 0;
+        padding: 18px 16px 16px 16px;
+        transition: box-shadow 0.2s;
+        height: 100%;
+    }
+    .projeto-link {
+        display: block;
+        text-decoration: none;
+        color: inherit;
+        height: 100%;
+    }
+    .flex {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px 10px;
+        justify-content: center;
+        align-items: stretch;
+    }
                 </div>
             </div>
         </section>
@@ -136,9 +306,9 @@
                     <h2>Pleased to meet you, I'm <span>Rayane Paula!</span></h2>
                     <p>I'm passionate about technology, with experience in web development and Salesforce. I always strive to innovate and deliver high-impact results for my clients, combining creativity, technical skill, and dedication.</p>
                     <div class="redes-sociais" style="justify-content:center;display:flex;gap:1.5rem;">
-                        <a href="https://www.linkedin.com/in/seulinkedin" target="_blank" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a>
-                        <a href="https://github.com/seuusuario" target="_blank" aria-label="GitHub"><i class="bi bi-github"></i></a>
-                        <a href="https://instagram.com/seuinstagram" target="_blank" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+                        <a href="https://www.linkedin.com/in/rayanepaula" target="_blank" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a>
+                        <a href="https://github.com/rayanepaula" target="_blank" aria-label="GitHub"><i class="bi bi-github"></i></a>
+
                     </div>
                 </div>
             </div>
@@ -157,299 +327,12 @@
                 </form>
             </div>
         </section>
-    </main>
+
     <footer>
         <div class="interface">
             <p>&copy; 2025 Rayane Paula. All rights reserved.</p>
         </div>
     </footer>
-</main>
 
-<!-- Chatbot Widget -->
-<button id="openChatbotBtn" style="position:fixed;bottom:32px;right:32px;z-index:1001;background:#463273;color:#fff;border:none;border-radius:50%;width:56px;height:56px;box-shadow:0 2px 12px rgba(70,50,115,0.18);font-size:1.7rem;cursor:pointer;">💬</button>
-<div id="chatbotContainer" style="display:none;position:fixed;bottom:100px;right:32px;z-index:1002;background:#fff;border-radius:16px;box-shadow:0 4px 32px rgba(70,50,115,0.18);border:2px solid #463273;width:370px;max-width:95vw;">
-  <div style="background:#463273;color:#fff;padding:12px 16px;border-radius:16px 16px 0 0;font-weight:600;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:2;">
-    <span>Flash Info</span>
-    <button id="closeChatbotBtn" style="background:none;border:none;color:#fff;font-size:1.2rem;cursor:pointer;">&times;</button>
-  </div>
-  <div id="chatbox" style="width:100%;height:180px;padding:12px;overflow-y:auto;font-family:Poppins,Arial,sans-serif;background:#f9f9f9;font-size:1rem;display:flex;flex-direction:column;"></div>
-  <!-- Removed user input and send button for button-only interaction -->
-  <div id="categories" style="margin:10px 0 0 0;">
-    <div id="topicsList" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px 8px;padding:16px 8px 10px 8px;width:100%;box-sizing:border-box;">
-      <button class="topic-btn" data-cat="basic" style="background:#e7e3f7;color:#463273;border:none;border-radius:6px;padding:8px 0;font-size:0.85rem;font-weight:600;cursor:pointer;box-shadow:0 2px 8px rgba(70,50,115,0.07);width:100%;min-width:0;max-width:100%;">Basics</button>
-      <button class="topic-btn" data-cat="experience" style="background:#e7e3f7;color:#463273;border:none;border-radius:6px;padding:8px 0;font-size:0.85rem;font-weight:600;cursor:pointer;box-shadow:0 2px 8px rgba(70,50,115,0.07);width:100%;min-width:0;max-width:100%;">Experiences</button>
-      <button class="topic-btn" data-cat="tools" style="background:#e7e3f7;color:#463273;border:none;border-radius:6px;padding:8px 0;font-size:0.85rem;font-weight:600;cursor:pointer;box-shadow:0 2px 8px rgba(70,50,115,0.07);width:100%;min-width:0;max-width:100%;">Tools</button>
-      <button class="topic-btn" data-cat="courses" style="background:#e7e3f7;color:#463273;border:none;border-radius:6px;padding:8px 0;font-size:0.85rem;font-weight:600;cursor:pointer;box-shadow:0 2px 8px rgba(70,50,115,0.07);width:100%;min-width:0;max-width:100%;">Courses</button>
-      <button class="topic-btn" data-cat="goals" style="background:#e7e3f7;color:#463273;border:none;border-radius:6px;padding:8px 0;font-size:0.85rem;font-weight:600;cursor:pointer;box-shadow:0 2px 8px rgba(70,50,115,0.07);width:100%;min-width:0;max-width:100%;">Goals</button>
-      <button class="topic-btn" data-cat="contact" style="background:#e7e3f7;color:#463273;border:none;border-radius:6px;padding:8px 0;font-size:0.85rem;font-weight:600;cursor:pointer;box-shadow:0 2px 8px rgba(70,50,115,0.07);width:100%;min-width:0;max-width:100%;">Contact</button>
-    </div>
-  </div>
-  <div id="subcategories" style="display:none;margin-top:10px;">
-    <strong id="subcat-title"></strong>
-    <div id="subcat-list" style="display:flex;flex-direction:column;gap:7px;margin:12px 0 0 0;padding:0 18px;"></div>
-    <div style="display:flex;justify-content:center;width:100%;">
-      <button id="backBtn" style="margin-top:12px;background:#e7e3f7;color:#463273;border:none;border-radius:6px;padding:4px 0;font-size:0.85rem;font-weight:600;cursor:pointer;min-width:90px;max-width:180px;box-shadow:0 2px 8px rgba(70,50,115,0.07);margin-left:1px;margin-right:1px;align-self:center;">Back to topics</button>
-    </div>
-  </div>
-</div>
-</div>
-<script>
-  const topicsList = document.getElementById('topicsList');
-
-  const openBtn = document.getElementById('openChatbotBtn');
-  const closeBtn = document.getElementById('closeChatbotBtn');
-  const chatbot = document.getElementById('chatbotContainer');
-  const chatbox = document.getElementById('chatbox');
-  // Removed userInput and sendBtn
-  const categoriesDiv = document.getElementById('categories');
-  const subcategoriesDiv = document.getElementById('subcategories');
-  const subcatTitle = document.getElementById('subcat-title');
-  const subcatList = document.getElementById('subcat-list');
-  const backBtn = document.getElementById('backBtn');
-
-  let conversationState = null;
-
-  const data = {
-    basic: {
-      "Where are you based?": "I'm based in Montreal, Canada.",
-      "What languages do you speak?": "I speak Portuguese (native), English, and French at B2 level.",
-      "What is your current job?": "I'm a Business Architecture Analyst at Accenture, focused on SAP Security and automation."
-    },
-    experience: {
-      options: ["Concentrix", "Accenture"],
-      Concentrix: `At Concentrix, I started as a customer service agent handling phone and chat. I improved menu creation using Excel, doubling productivity. Then I became a Real-Time Analyst monitoring KPIs and adjusting teams in real-time. Later, as Planning Analyst, I managed staffing, breaks, and schedules working with operations managers.`,
-      Accenture: `At Accenture, I began as an apprentice learning SAP Security. Now I manage user access, analyze errors, create reports with macros that save hours, and am working on automation using agents.`
-    },
-    tools: {
-      "What tools do you use?": "I use SAP, Power BI, Microsoft Excel (including macros), and I'm learning SQL and AI tools like agents."
-    },
-    courses: {
-      "What courses have you done?": "I completed courses in Automating Data Classification for AI, SQL Basics, Power BI, Google IT Support, and I know basics of HTML, CSS, and JavaScript."
-    },
-    goals: {
-      "What are your goals?": "I want to grow in the Data & AI field and build smarter, automated solutions that solve real problems."
-    }
-  };
-
-  function addMessage(text, sender) {
-    const msgDiv = document.createElement('div');
-    msgDiv.classList.add('message', sender);
-    msgDiv.style.margin = '7px 0';
-    msgDiv.style.wordBreak = 'break-word';
-    msgDiv.style.padding = '7px 12px';
-    msgDiv.style.borderRadius = '12px';
-    msgDiv.style.maxWidth = '90%';
-    msgDiv.style.display = 'inline-block';
-    msgDiv.style.whiteSpace = 'pre-line';
-    if(sender === 'user') {
-      msgDiv.style.background = '#e7e3f7';
-      msgDiv.style.color = '#463273';
-      msgDiv.style.fontWeight = 'bold';
-      msgDiv.style.alignSelf = 'flex-end';
-    } else {
-      msgDiv.style.background = '#f3f3f3';
-      msgDiv.style.color = 'green';
-      msgDiv.style.alignSelf = 'flex-start';
-    }
-    msgDiv.textContent = text;
-    chatbox.appendChild(msgDiv);
-    chatbox.scrollTop = chatbox.scrollHeight;
-  }
-
-  function showCategories() {
-    categoriesDiv.style.display = "block";
-    subcategoriesDiv.style.display = "none";
-    conversationState = null;
-  }
-
-  function showSubcategories(cat) {
-    if (cat === 'experience') {
-      subcatTitle.textContent = "Choose an experience:";
-      subcatList.innerHTML = '';
-      data.experience.options.forEach(exp => {
-        const btn = document.createElement('button');
-        btn.textContent = exp;
-        btn.classList.add('exp-btn', 'clickable');
-        btn.dataset.exp = exp;
-        btn.style.background = '#e7e3f7';
-        btn.style.color = '#463273';
-        btn.style.border = 'none';
-        btn.style.borderRadius = '7px';
-        btn.style.padding = '10px 0';
-        btn.style.fontSize = '1.05rem';
-        btn.style.fontWeight = '600';
-        btn.style.cursor = 'pointer';
-        btn.style.marginBottom = '6px';
-        subcatList.appendChild(btn);
-      });
-      subcategoriesDiv.style.display = "block";
-      categoriesDiv.style.display = "none";
-      conversationState = 'experience-submenu';
-    }
-  }
-
-  function botReply(input) {
-    const text = input.toLowerCase();
-    for (const cat in data) {
-      if(cat === 'experience') continue;
-      for (const question in data[cat]) {
-        if(text.includes(question.toLowerCase())) {
-          return data[cat][question];
-        }
-      }
-    }
-    if(text.includes("help") || text.includes("what can you do")) {
-      return "Please choose a topic from the list, or ask about my experiences, tools, courses, or goals.";
-    }
-    if(text.includes("hi") || text.includes("hello")) {
-      return "Hi! You can choose a topic below or ask me about my experience, tools, courses, or goals.";
-    }
-    return "Sorry, I didn't understand. Please choose a topic or ask a different question.";
-  }
-
-  categoriesDiv.addEventListener('click', e => {
-    if(e.target.classList.contains('topic-btn')) {
-      const cat = e.target.dataset.cat;
-      if(cat === 'experience') {
-        showSubcategories(cat);
-      } else if(cat === 'contact') {
-        categoriesDiv.style.display = "none";
-        subcategoriesDiv.style.display = "block";
-        subcatTitle.textContent = "Contact Options:";
-        subcatList.innerHTML = '';
-        // LinkedIn
-        const btnLinkedin = document.createElement('a');
-        btnLinkedin.href = 'https://www.linkedin.com/in/seulinkedin';
-        btnLinkedin.target = '_blank';
-        btnLinkedin.rel = 'noopener';
-        btnLinkedin.textContent = 'LinkedIn';
-        btnLinkedin.className = 'contact-btn';
-        btnLinkedin.style.background = '#e7e3f7';
-        btnLinkedin.style.color = '#463273';
-        btnLinkedin.style.border = 'none';
-        btnLinkedin.style.borderRadius = '6px';
-        btnLinkedin.style.padding = '4px 14px';
-        btnLinkedin.style.fontSize = '0.85rem';
-        btnLinkedin.style.fontWeight = '600';
-        btnLinkedin.style.cursor = 'pointer';
-        btnLinkedin.style.boxShadow = '0 2px 8px rgba(70,50,115,0.07)';
-        btnLinkedin.style.marginBottom = '7px';
-        btnLinkedin.style.display = 'inline-block';
-        btnLinkedin.style.width = '120px';
-        btnLinkedin.style.textDecoration = 'none';
-        btnLinkedin.style.textAlign = 'center';
-        subcatList.appendChild(btnLinkedin);
-        // Email
-        const btnEmail = document.createElement('a');
-        btnEmail.href = 'mailto:youremail@domain.com';
-        btnEmail.textContent = 'Email';
-        btnEmail.className = 'contact-btn';
-        btnEmail.style.background = '#e7e3f7';
-        btnEmail.style.color = '#463273';
-        btnEmail.style.border = 'none';
-        btnEmail.style.borderRadius = '6px';
-        btnEmail.style.padding = '4px 14px';
-        btnEmail.style.fontSize = '0.85rem';
-        btnEmail.style.fontWeight = '600';
-        btnEmail.style.cursor = 'pointer';
-        btnEmail.style.boxShadow = '0 2px 8px rgba(70,50,115,0.07)';
-        btnEmail.style.marginBottom = '7px';
-        btnEmail.style.display = 'inline-block';
-        btnEmail.style.width = '120px';
-        btnEmail.style.textDecoration = 'none';
-        btnEmail.style.textAlign = 'center';
-        subcatList.appendChild(btnEmail);
-        // Phone
-        const btnPhone = document.createElement('a');
-        btnPhone.href = 'tel:+1234567890';
-        btnPhone.textContent = 'Phone';
-        btnPhone.className = 'contact-btn';
-        btnPhone.style.background = '#e7e3f7';
-        btnPhone.style.color = '#463273';
-        btnPhone.style.border = 'none';
-        btnPhone.style.borderRadius = '6px';
-        btnPhone.style.padding = '4px 14px';
-        btnPhone.style.fontSize = '0.85rem';
-        btnPhone.style.fontWeight = '600';
-        btnPhone.style.cursor = 'pointer';
-        btnPhone.style.boxShadow = '0 2px 8px rgba(70,50,115,0.07)';
-        btnPhone.style.marginBottom = '7px';
-        btnPhone.style.display = 'inline-block';
-        btnPhone.style.width = '120px';
-        btnPhone.style.textDecoration = 'none';
-        btnPhone.style.textAlign = 'center';
-        subcatList.appendChild(btnPhone);
-        conversationState = 'contact';
-      } else {
-        categoriesDiv.style.display = "none";
-        subcategoriesDiv.style.display = "block";
-        subcatTitle.textContent = "Questions you can ask:";
-        subcatList.innerHTML = '';
-        for(const q in data[cat]) {
-          const btn = document.createElement('button');
-          btn.textContent = q;
-          btn.classList.add('question-btn');
-          btn.dataset.question = q;
-          btn.style.background = '#e7e3f7';
-          btn.style.color = '#463273';
-          btn.style.border = 'none';
-          btn.style.borderRadius = '7px';
-          btn.style.padding = '10px 0';
-          btn.style.fontSize = '1.05rem';
-          btn.style.fontWeight = '600';
-          btn.style.cursor = 'pointer';
-          btn.style.marginBottom = '6px';
-          subcatList.appendChild(btn);
-        }
-        conversationState = cat;
-      }
-    }
-  });
-
-  subcategoriesDiv.addEventListener('click', e => {
-    if(e.target.classList.contains('question-btn')) {
-      if (conversationState && conversationState !== 'experience-submenu') {
-        const question = e.target.dataset.question;
-        if(question) {
-          addMessage(question, 'user');
-          const ans = data[conversationState][question];
-          setTimeout(() => addMessage(ans, 'bot'), 400);
-        }
-      }
-    } else if(e.target.classList.contains('clickable')) {
-      if(conversationState === 'experience-submenu') {
-        const exp = e.target.dataset.exp;
-        addMessage(exp, 'user');
-        addMessage(data.experience[exp], 'bot');
-        // Removed the follow-up question about the other experience
-        conversationState = null;
-        setTimeout(() => {
-          addMessage("You can choose another topic or experience.", 'bot');
-          showCategories();
-        }, 700);
-      }
-    }
-  });
-
-  function handleYesNoAnswer(input) {
-    // No longer used since user input is removed
-    return false;
-  }
-
-  // Removed sendBtn and userInput event listeners
-
-  backBtn.addEventListener('click', () => {
-    showCategories();
-  });
-
-  openBtn.onclick = () => {
-    chatbot.style.display = 'block';
-    if (chatbox.childElementCount === 0) {
-      addMessage("Hi! 👋 I'm Rayane Bot. Please choose a topic below.", 'bot');
-    }
-    showCategories();
-  };
-  closeBtn.onclick = () => { chatbot.style.display = 'none'; };
-</script>
 </body>
 </html>

@@ -1,3 +1,100 @@
+/* Chatbot and custom portfolio styles moved from HTML */
+.chatbot-btn {
+  background: #e7e3f7;
+  color: #463273;
+  border: none;
+  border-radius: 6px;
+  font-family: 'Poppins', Arial, sans-serif;
+  font-size: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition: background 0.2s;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  padding: 8px 0;
+  width: 100%;
+  min-width: 90px;
+  max-width: 180px;
+  text-align: center;
+}
+.chatbot-btn:hover {
+  background: #d3c3f0;
+}
+
+/* Animated glass/reflection effect for .topo-do-site */
+.topo-do-site {
+    position: relative;
+    overflow: hidden;
+}
+.topo-do-site::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -60%;
+    width: 120%;
+    height: 100%;
+    background: linear-gradient(120deg, rgba(255,255,255,0.01) 0%, rgba(255,255,255,0.18) 45%, rgba(255,255,255,0.01) 100%);
+    filter: blur(16px);
+    pointer-events: none;
+    animation: glass-reflection-move 10s linear infinite;
+    z-index: 1;
+}
+@keyframes glass-reflection-move {
+    0% { left: -60%; }
+    100% { left: 100%; }
+}
+.topo-do-site > .interface {
+    position: relative;
+    z-index: 2;
+}
+.projeto-box {
+    width: 320px;
+    min-height: 320px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 2px 12px rgba(70,50,115,0.07);
+    margin: 0 10px 20px 0;
+    padding: 18px 16px 16px 16px;
+    transition: box-shadow 0.2s;
+    height: 100%;
+}
+.projeto-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    height: 100%;
+}
+.flex {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px 10px;
+    justify-content: center;
+    align-items: stretch;
+    margin-top: 32px;
+}
+.projeto-box img {
+    max-width: 120px;
+    max-height: 120px;
+    margin-bottom: 12px;
+    object-fit: contain;
+}
+.projeto-box h3 {
+    margin: 0 0 10px 0;
+    font-size: 1.18rem;
+    color: #463273;
+}
+.projeto-box p {
+    font-size: 1rem;
+    color: #232323;
+    text-align: center;
+}
 /* Paleta de cores profissional */
 :root {
   --cor-primaria: #6264a7;
@@ -9,7 +106,6 @@
   --cor-cinza: #e2e8f0;
   --cor-footer: #1e293b;
 }
-
 
 body {
   margin: 0;
@@ -80,7 +176,7 @@ body {
   transform: none;
   border-bottom: 1.5px solid var(--cor-cinza);
   position: relative;
-  overflow: visible;
+  overflow: hidden;
 }
 
 .topo-do-site::after {
