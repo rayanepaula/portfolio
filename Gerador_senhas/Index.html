@@ -8,16 +8,25 @@
     <link rel="Stylesheet" href="Style.css">
 </head>
 <body>
-    <img class="logo" src="./Assets/logo.png" alt="Gerador de senha logo" />
-    <main class="container-input">
-        <span>Tamanho: <span id="valor"></span> caracteres </span>
-        <input id="slider" class="slider" type="range" min="5" max="15" value="10"/>
-        <button id="Button" class="Button-cta" onclick="generatepassword()"> Gerar senha</button>
-    </main>
-    <div id="container-password" onclick = "copypassword()" class="container-password hide">
-        <span class="Title">Sua senha gerada foi:</span> <span id="password" class="password"></span>
-        <span class="tooltip"> Clique na senha para copiar 👆 </span>
-
+    <div class="main-wrapper">
+        <div class="logo-integrated">
+            
+            <span class="logo-title">Professional Password<br><span class="logo-title-gradient">Generator</span></span>
+        </div>
+        <main class="container-input">
+            <p class="subtitle">Generate secure, unique passwords instantly for all your needs.</p>
+            <div class="slider-group">
+                <label for="slider" class="slider-label">Password length: <span id="valor">12</span> characters</label>
+                <input id="slider" class="slider" type="range" min="5" max="25" value="12"/>
+            </div>
+            <button id="Button" class="Button-cta" onclick="generatepassword()">Generate Password</button>
+        </main>
+        <div id="container-password" onclick="copypassword()" class="container-password hide">
+            <span class="Title">Your generated password:</span>
+            <span id="password" class="password"></span>
+            <span class="tooltip">Click the password to copy 👆</span>
+            <span id="copy-feedback" class="copy-feedback">Password copied successfully!</span>
+        </div>
     </div>
     <script src="Script.js"></script>
 </body>
