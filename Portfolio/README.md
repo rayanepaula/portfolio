@@ -1,36 +1,32 @@
-# Portfólio Rayane Paula
+# Rayane Paula's Portfolio
 
-> Portfólio profissional de Rayane Paula - Business Architecture Analyst | SAP Security | Data & AI
+> Professional portfolio of Rayane Paula – Business Architecture Analyst | SAP Security | Data & AI
 
-![Preview do Portfólio](img/Foto_Rayane.jpg)
+## About the Project
 
-## Sobre o Projeto
+This is the personal and professional portfolio of Rayane Paula, built with HTML, CSS, and JavaScript. It features a modern design with glass effect and an interactive chatbot. The goal is to showcase skills, experience, projects, and contact information in a clear and elegant way.
 
-Este é o portfólio pessoal e profissional de Rayane Paula, desenvolvido em HTML, CSS e JavaScript, com design moderno, efeito glass e chatbot interativo. O objetivo é apresentar habilidades, experiências, projetos e formas de contato de maneira elegante e intuitiva.
+### Features
+- **Personal introduction** with photo, summary, and areas of expertise  
+- **Skills and projects** section  
+- **Interactive chatbot** with Q&A about career, tools, courses, goals, and contact  
+- **Contact form**  
+- **Responsive design** with glass effect  
 
-### Funcionalidades
-- **Apresentação pessoal** com foto, resumo e áreas de atuação
-- **Seção de habilidades** (Skills) e projetos
-- **Chatbot interativo** com perguntas e respostas sobre carreira, ferramentas, cursos, objetivos e contato
-- **Formulário de contato**
-- **Design responsivo** e efeito vidro/espelho
+## How to View
 
-## Como visualizar
+Just open the `Index_potfolio.html` file in your browser.
 
-Basta abrir o arquivo `Index_potfolio.html` em seu navegador.
+## Structure
 
-## Estrutura
+- `Index_potfolio.html` — Main portfolio page  
+- `style_portfolio.css` — Custom styles  
+- `script_portfolio.js` — Additional scripts (if needed)  
+- `img/` — Portfolio images  
 
-- `Index_potfolio.html` — Página principal do portfólio
-- `style_portfolio.css` — Estilos customizados
-- `script_portfolio.js` — Scripts adicionais (se necessário)
-- `img/` — Imagens do portfólio
+## Contact
 
-## Contato
+- https://www.linkedin.com/in/rayanepaula  
+- Email: rayanepaulaeng@gmail.com 
+- Phone: +1 438 728 6481 
 
-- [LinkedIn](https://www.linkedin.com/in/seulinkedin)
-- Email: youremail@domain.com
-- Telefone: +1 234 567 890
-
----
-Desenvolvido por Rayane Paula
